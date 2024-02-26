@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { MySpinner } from "../components";
 
 const SignUp = () => {
   const [formData, setFormData] = useState({});
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (event) => {
     setFormData({ ...formData, [event.target.id]: event.target.value });
@@ -31,6 +33,7 @@ const SignUp = () => {
         console.log("Response data:", data);
         setError(false);
         setLoading(false);
+        navigate("/sign-in");
       })
       .catch((error) => {
         setError(true);
@@ -39,7 +42,7 @@ const SignUp = () => {
       });
   };
 
-  console.log(formData);
+  // console.log(formData);
 
   return (
     <div className="p-3 max-w-lg mx-auto">
@@ -68,14 +71,14 @@ const SignUp = () => {
         />
         <button
           disabled={loading}
-          className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
+          className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80 flex justify-center"
         >
-          {loading ? "loading..." : "Sign Up"}
+          {loading ? <MySpinner /> : "Sign Up"}
         </button>
       </form>
       <div className="flex gap-2 mt-5">
         <p>Have an Account?</p>
-        <Link to="/sign-in"> 
+        <Link to="/sign-in">
           <span className="text-blue-500">Sign In</span>
         </Link>
       </div>

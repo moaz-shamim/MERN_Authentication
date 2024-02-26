@@ -1,3 +1,3 @@
 import Header from "./Header";
-
-export { Header };
+import MySpinner from "./Spinner";
+export { Header, MySpinner };
