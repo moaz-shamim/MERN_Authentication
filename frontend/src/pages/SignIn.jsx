@@ -1,12 +1,20 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { MySpinner } from "../components";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  signInStart,
+  signInSucess,
+  signInFailure,
+} from "../redux/slices/user/userSlice";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({});
-  const [error, setError] = useState(false);
-  const [loading, setLoading] = useState(false);
+  // const [error, setError] = useState(false);
+  // const [loading, setLoading] = useState(false);
+  const { loading, error } = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleChange = (event) => {
     setFormData({ ...formData, [event.target.id]: event.target.value });
@@ -14,7 +22,8 @@ const SignIn = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setLoading(true);
+    dispatch(signInStart());
+    // setLoading(true);
     const response = await fetch("/api/auth/signin", {
       method: "POST",
       headers: {
@@ -23,21 +32,23 @@ const SignIn = () => {
       body: JSON.stringify(formData), // Convert the data object to JSON
     })
       .then((response) => {
-        if (!response.ok) {
-          setError(true);
-          throw new Error("Network response was not ok");
-        }
         return response.json(); // Parse the JSON response
       })
       .then((data) => {
         console.log("Response data:", data);
-        setError(false);
-        setLoading(false);
-        navigate("/");
+        // setError(false);
+        // setLoading(false);
+        if (data._id) {
+          dispatch(signInSucess(data));
+          navigate("/");
+        } else {
+          dispatch(signInFailure(data));
+        }
       })
       .catch((error) => {
-        setError(true);
-        setLoading(false);
+        // setError(true);
+        // setLoading(false);
+        dispatch(signInFailure(error));
         console.error("There was a problem with the fetch operation:", error);
       });
   };
@@ -73,7 +84,9 @@ const SignIn = () => {
           <span className="text-blue-500">Sign Up</span>
         </Link>
       </div>
-      <p className="text-red-700 mt-5">{error && "Something went Wrong!"}</p>
+      <p className="text-red-700 mt-5">
+        {error ? error.message || "Something went wrong!" : ""}
+      </p>
     </div>
   );
 };
