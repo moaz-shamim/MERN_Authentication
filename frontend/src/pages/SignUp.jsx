@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { MySpinner } from "../components";
+import { MySpinner ,OAuth } from "../components";
 
 const SignUp = () => {
   const [formData, setFormData] = useState({});
