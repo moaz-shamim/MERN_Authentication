@@ -7,6 +7,7 @@ import { Home, About, SignIn, SignUp, Profile } from "./pages";
 import { persistor, store } from "./redux/app/store.js";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
+import { PrivateRoute } from "./components";
 
 const router = createBrowserRouter([
   {
@@ -31,7 +32,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/profile",
-        element: <Profile />,
+        element: (
+          <PrivateRoute>
+            <Profile />
+          </PrivateRoute>
+        ),
       },
     ],
   },
