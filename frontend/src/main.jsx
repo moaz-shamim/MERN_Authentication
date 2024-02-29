@@ -32,19 +32,19 @@ const router = createBrowserRouter([
       },
       {
         path: "/profile",
-        element: (
-          <PrivateRoute>
-            <Profile />
-          </PrivateRoute>
-        ),
-      },
+        element: <PrivateRoute />,
+        children: [
+          { path: "", element: <Profile /> }
+        ]
+      }
     ],
   },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <Provider store={store}>
-    <PersistGate persistor={persistor} />
-    <RouterProvider router={router} />
+    <PersistGate persistor={persistor}>
+      <RouterProvider router={router} />
+    </PersistGate>
   </Provider>
 );
